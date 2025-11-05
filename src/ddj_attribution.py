@@ -80,7 +80,7 @@ def promtpify(reason):
         "content": user_prompt.format(reason=reason).strip()
     }]
 
-all_results = glob.glob("../tpqa_result_final_merge/*/*.json")
+all_results = glob.glob("../uqa_result_final_merge/*/*.json")
 final_results = {}
 for x in all_results:
     model_name, dataset_name = x.split("/")[-2], x.split("/")[-1]

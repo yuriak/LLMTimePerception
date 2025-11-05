@@ -6,7 +6,7 @@ model=$1
 output_dir=$2
 num_runs=$3
 
-VLLM_USE_V1=0 PYTHONPATH=${SRC_PATH} python ${SRC_PATH}/tpqa_evaluation.py --inference_mode api_self_hosted \
+VLLM_USE_V1=0 PYTHONPATH=${SRC_PATH} python ${SRC_PATH}/ddj_evaluation.py --inference_mode api_self_hosted \
   --base_url http://localhost:9876/v1/ \
   --api_key None \
   --llm_in_use ${model} \

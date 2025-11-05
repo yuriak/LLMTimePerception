@@ -1,7 +1,7 @@
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 SCRIPT_PATH="${ROOT_DIR}/scripts"
 SRC_PATH="${ROOT_DIR}/src"
-OUTPUT_DIR="${ROOT_DIR}/tpqa_result/"
+OUTPUT_DIR="${ROOT_DIR}/ddj_result/"
 
 models=(
   "meta-llama/Llama-3.3-70B-Instruct"
@@ -14,13 +14,12 @@ models=(
 
 job_script_name=$1
 job_script=$1
-tpqa_script="${SCRIPT_PATH}/run_tpqa.sh"
+ddj_script="${SCRIPT_PATH}/run_ddj.sh"
 
 num_runs=5
 
 # run all experiments with slurm, modify this to run on local machine
 for model in "${models[@]}"; do
     model_short_name=$(echo $model | tr '/' '_')
-    sbatch -J "tpqa_${model_short_name}" ${job_script} ${tpqa_script} ${model} $OUTPUT_DIR ${num_runs}
-    # ${tpqa_script} ${model} ${OUTPUT_DIR} ${num_runs}
+    sbatch -J "ddj_${model_short_name}" ${job_script} ${ddj_script} ${model} $OUTPUT_DIR ${num_runs}
 done
