@@ -1,6 +1,6 @@
 # 🕒 **Discrete Minds in a Continuous World: Do Language Models Know Time Passes?**
 
-*A clean, runnable reference implementation accompanying the EMNLP 2025 paper.*
+*A clean, runnable reference implementation accompanying the [EMNLP 2025 paper](https://aclanthology.org/2025.findings-emnlp.1016/).*
 This repository contains all code and datasets used in our experiments on **LLM time perception**, including dialogue duration judgment (DDJ), urgency-aware question answering (UQA), and BombRush time-pressured decision making.
 
 ---
