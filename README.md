@@ -9,9 +9,10 @@ This repository contains all code and datasets used in our experiments on **LLM 
 
 Modern large language models (LLMs) show strong reasoning and world-knowledge capabilities—but can they **perceive time** as it passes?
 This project investigates that question through the **Token-Time Hypothesis**, which posits that LLMs may treat token counts as discrete proxies for real-world, continuous time. We explore whether this implicit mapping influences how they interpret, reason, and act under temporal constraints.
-<br>
 
-![Overview Illustration](images/overview.png)
+<p align="center">
+  <img src="images/overview.png" alt="Overview Illustration" width="650">
+</p>
 
 ### Core Research Questions
 
