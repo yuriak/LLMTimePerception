@@ -16,6 +16,10 @@ This project investigates that question through the **Token-Time Hypothesis**, w
    In this experiment, models are given two multi-turn conversations and asked to judge which one took longer to generate.
    We test this under multiple cue conditions—purely textual, explicit timestamps, and intentionally misleading signals—to see whether models rely on text length, timing information, or a deeper mapping between token count and wall-clock time.
    The DDJ task validates the *Token-Time Hypothesis* by showing that most models can infer duration from text length and that large reasoning models (LRMs) remain robust even under contradictory temporal cues.
+   
+<br>
+
+![DDJ Illustration](images/DDJ.png)
 
 2. **Urgency-Aware Question Answering (UQA): Can LLMs demonstrate “temporal empathy”?**
    Temporal empathy means adapting behavior to user time constraints.
