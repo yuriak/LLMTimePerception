@@ -11,7 +11,7 @@ Modern large language models (LLMs) show strong reasoning and world-knowledge ca
 This project investigates that question through the **Token-Time Hypothesis**, which posits that LLMs may treat token counts as discrete proxies for real-world, continuous time. We explore whether this implicit mapping influences how they interpret, reason, and act under temporal constraints.
 
 <p align="center">
-  <img src="images/overview.png" alt="Overview Illustration" width="650">
+  <img src="images/overview.png" alt="Overview Illustration" width="500">
 </p>
 
 ### Core Research Questions
@@ -21,18 +21,24 @@ This project investigates that question through the **Token-Time Hypothesis**, w
    We test this under multiple cue conditions—purely textual, explicit timestamps, and intentionally misleading signals—to see whether models rely on text length, timing information, or a deeper mapping between token count and wall-clock time.
    The DDJ task validates the *Token-Time Hypothesis* by showing that most models can infer duration from text length and that large reasoning models (LRMs) remain robust even under contradictory temporal cues.
    
-<br>
+<!-- <br>
 
-![DDJ Illustration](images/DDJ.png)
+![DDJ Illustration](images/DDJ.png) -->
+<p align="center">
+  <img src="images/DDJ.png" alt="DDJ Illustration" width="550">
+</p>
 
 2. **Urgency-Aware Question Answering (UQA): Can LLMs demonstrate “temporal empathy”?**
    Temporal empathy means adapting behavior to user time constraints.
    In UQA, we compare model accuracy and output length between *normal* and *urgent* prompts (e.g., “Please answer quickly!!!”).
    Models consistently shorten responses under urgency while maintaining or improving accuracy—especially on reasoning benchmarks—suggesting that they internalize the relation between shorter token sequences and reduced response time.
 
-<br>
+<!-- <br>
 
-![UQA Illustration](images/UQA.png)
+![UQA Illustration](images/UQA.png) -->
+<p align="center">
+  <img src="images/UQA.png" alt="UQA Illustration" width="500">
+</p>
 
 3. **BombRush: How do LLMs plan and reason when time literally runs out?**
    BombRush extends the study from static tasks to a dynamic, interactive environment.
@@ -40,9 +46,12 @@ This project investigates that question through the **Token-Time Hypothesis**, w
    The agent must balance thoughtfulness and action, dynamically adjusting reasoning depth as time diminishes.
    This experiment reveals that reasoning verbosity decreases as temporal pressure increases, demonstrating adaptive time-aware decision making.
 
-<br>
+<!-- <br>
 
-![BombRush Illustration](images/bomb_rush.png)
+![BombRush Illustration](images/bomb_rush.png) -->
+<p align="center">
+  <img src="images/bomb_rush.png" alt="BombRush Illustration" width="500">
+</p>
 
 Together, these experiments offer the first systematic evidence that LLMs possess a primitive but measurable awareness of temporal progression, bridging the gap between discrete linguistic processing and continuous real-world time.
 
