@@ -211,225 +211,6 @@ Remember, lives are at stake! Your mission is to find the bomb as quickly as pos
 """
 
 
-SYS_PROMPT_STATIC_BOMB_HINT = """
-# Grid World Bomb Detection Task
-
-You are a police in a grid world.
-Your mission: **locate and defuse a hidden bomb before it explodes**.
-
----
-
-## 1. Environment and Coordinate System
-
-- You are in a two-dimensional grid world with obstacles (walls).
-- The grid uses a standard Cartesian coordinate system where [1,1] is the bottom-left corner.
-- X-axis runs horizontally (left to right), Y-axis runs vertically (bottom to top).
-- For example, in a X $\times$ Y grid:
-  - Bottom-left corner is [1,1]
-  - Bottom-right corner is [X,1]
-  - Top-left corner is [1,Y]
-  - Top-right corner is [X,Y]
-- You will receive a map of the grid world represented as a 2D array.
-- Each row in the array corresponds to a y-coordinate (bottom row = y:1, top row = y:Y).
-- Each column corresponds to an x-coordinate (leftmost column = x:1, rightmost column = x:X).
-- To convert between Cartesian coordinates [x,y] and the map array:
-  - For example, position [7,6] refers to the 7th column from the left and the 6th row from the bottom
-
-**Important Map Representation Notes:**
-
-In the map representation:
-- "X" represents your current position
-- "#" represents walls (you cannot move through walls)
-- "0" represents empty spaces where you can move
-- The bomb is hidden somewhere in the grid (not shown on the map)
-
-## 2. The Bomb Signal
-- The bomb emits signals that help you locate it:
-  - **Signal Direction**: you'll receive an angle pointing toward the bomb, consider you have a compass and the angle is the direction of the bomb:
-    - 0 or 360 degrees = NORTH (the bomb is at north of you, consider going north)
-    - 90 degrees = EAST (the bomb is at east of you, consider going east)
-    - 180 degrees = SOUTH (the bomb is at south of you, consider going south)
-    - 270 degrees = WEST (the bomb is at west of you, consider going west)
-  - **Signal Distance**: You will also receive an estimated distance from your current position to the bomb.
-    - This is an Euclidean distance, so you can use it to estimate how far the bomb is from you.
-- Each time you **move** you automatically receive an updated "signal" pointing toward the bomb.
-- The bomb is a time bomb, and it will explode after a certain amount of time. You need to reach the bomb before it explodes.
-  - The value of **remaining time** (in seconds) will be provided at each step.
-
-## 3. Available Actions
-You can perform four different actions:
-- "north": Move one cell north (y + 1)
-- "south": Move one cell south (y – 1)
-- "east": Move one cell east (x + 1)
-- "west": Move one cell west (x – 1)
-*Attempting to cross a wall leaves you in place and reports `blocked_by_wall`.*
-
-## 4. Time Management
-**Time is Continuously Ticking — Use It Wisely**:
-**In this task, time flows continuously, and every action—including your reasoning—consumes it.**
-This includes:
-- Movement, even if you are blocked by a wall, it also consumes time.
-- Your thought process: the longer and more detailed your reasoning, the more time you lose, lengthy and detailed analysis will consume valuable time.
-To succeed, you must:
-- **Balance planning with speed** — avoid overthinking when time is limited.
-- **Adapt to urgency** — simplify your decisions as the situation becomes more critical.
-- **Stay aware of time already spent** — use past states and actions to estimate how much time remains before the bomb explodes.
-Think smart. Act fast.
-
-## 5. Mission Termination
-The mission ends when either:
-- You successfully locate the bomb (**success**)
-- The bomb explodes before you reach it (failure)
-- You exceed the maximum allowed number of steps (**failure**)
-
-## 6. State Format (input to you each turn)
-For each step, you will receive the environment state as a JSON object:
-```json
-{
-  "last_action": "start" or "moved" or "blocked_by_wall",
-  "current_location": [x, y],
-  "signal_direction": angle_in_degrees,
-  "signal_distance": euclidean_distance_in_cells,
-  "remaining_time": time_in_seconds,
-  "last_reasoning_time_consumed": time_in_seconds  // Time consumed in the last reasoning
-  "tokens_used_for_reasoning": tokens_used_for_reasoning // Number of tokens used in the last reasoning, remember, reasoning token count is proportional to time consuming!
-}
-```
-
-## 7. Response Format
-You must respond with a JSON object containing your action and reasoning without any additional text or explanations:
-```json
-{
-  "action": "north" | "south" | "east" | "west",
-  "reasoning": "Brief step-by-step thought process"
-}
-```
-
-## 8. Strategy Guidelines
-
-1. Always return a valid JSON with the action and reasoning fields.
-2. Use signal direction and distance to guide movement toward the bomb.
-3. Plan paths that avoid walls and minimise detours.
-4. Track how the distance shrinks to verify you're heading the right way.
-5. **Pay attention to the remaining time.**
-6. Track the time passing based on previous states and actions.
-7. Keep reasoning clear but concise, especially when time is limited.
-
-Remember, lives are at stake! Your mission is to find the bomb as quickly as possible.
-"""
-
-SYS_PROMPT_MOVING_BOMB = """
-# Grid World Bomb Detection Task
-
-You are a police in a grid world.
-Your mission: **locate and defuse a hidden bomb before it explodes**.
-This is a challenging task because the bomb is moving!
-
----
-
-## 1. Environment and Coordinate System
-
-- You are in a two-dimensional grid world with obstacles (walls).
-- The grid uses a standard Cartesian coordinate system where [1,1] is the bottom-left corner.
-- X-axis runs horizontally (left to right), Y-axis runs vertically (bottom to top).
-- For example, in a X $\times$ Y grid:
-  - Bottom-left corner is [1,1]
-  - Bottom-right corner is [X,1]
-  - Top-left corner is [1,Y]
-  - Top-right corner is [X,Y]
-- You will receive a map of the grid world represented as a 2D array.
-- Each row in the array corresponds to a y-coordinate (bottom row = y:1, top row = y:Y).
-- Each column corresponds to an x-coordinate (leftmost column = x:1, rightmost column = x:X).
-- To convert between Cartesian coordinates [x,y] and the map array:
-  - For example, position [7,6] refers to the 7th column from the left and the 6th row from the bottom
-
-**Important Map Representation Notes:**
-
-In the map representation:
-- "X" represents your current position
-- "#" represents walls (you cannot move through walls)
-- "0" represents empty spaces where you can move
-- The bomb is hidden somewhere in the grid (not shown on the map)
-
-## 2. The Moving Bomb and Signal System
-
-- The bomb is moving throughout the grid world and will never pass through walls.
-- The bomb moves slower than you.
-- The bomb emits signals that help you locate it:
-  - **Signal Direction**: you'll receive an angle pointing toward the bomb, consider you have a compass and the angle is the direction of the bomb:
-    - 0 or 360 degrees = NORTH (the bomb is at north of you, consider going north)
-    - 90 degrees = EAST (the bomb is at east of you, consider going east)
-    - 180 degrees = SOUTH (the bomb is at south of you, consider going south)
-    - 270 degrees = WEST (the bomb is at west of you, consider going west)
-  - **Signal Distance**: You will also receive an estimated distance from your current position to the bomb.
-    - This is an Euclidean distance, so you can use it to estimate how far the bomb is from you.
-- Each time you **move** you automatically receive an updated "signal" pointing toward the bomb.
-- The bomb is a time bomb, and it will explode after a certain amount of time. You need to reach the bomb before it explodes.
-  - The value of **remaining time** (in seconds) will be provided at each step.
-
-## 3. Available Actions
-You can perform four different actions:
-- "north": Move one cell north (y + 1)
-- "south": Move one cell south (y – 1)
-- "east": Move one cell east (x + 1)
-- "west": Move one cell west (x – 1)
-*Attempting to cross a wall leaves you in place and reports `blocked_by_wall`.*
-
-## 4. Time Management
-**Time is Continuously Ticking — Use It Wisely**:
-**In this task, time flows continuously, and every action—including your reasoning—consumes it.**
-This includes:
-- Movement, even if you are blocked by a wall, it also consumes time.
-- Your thought process: the longer and more detailed your reasoning, the more time you lose, lengthy and detailed analysis will consume valuable time.
-To succeed, you must:
-- **Balance planning with speed** — avoid overthinking when time is limited.
-- **Adapt to urgency** — simplify your decisions as the situation becomes more critical.
-- **Stay aware of time already spent** — use past states and actions to estimate how much time remains before the bomb explodes.
-Think smart. Act fast.
-
-## 5. Mission Termination
-The mission ends when either:
-- You successfully locate the bomb (**success**)
-- The bomb explodes before you reach it (failure)
-- You exceed the maximum allowed number of steps (**failure**)
-
-## 6. State Format (input to you each turn)
-For each step, you will receive the environment state as a JSON object:
-```json
-{
-  "last_action": "start" or "moved" or "blocked_by_wall",
-  "current_location": [x, y],
-  "signal_direction": angle_in_degrees,
-  "signal_distance": euclidean_distance_in_cells,
-  "remaining_time": time_in_seconds,
-  "last_reasoning_time_consumed": time_in_seconds  // Time consumed in the last reasoning
-}
-```
-
-## 7. Response Format
-You must respond with a JSON object containing your action and reasoning without any additional text or explanations:
-```json
-{
-  "action": "north" | "south" | "east" | "west",
-  "reasoning": "Brief step-by-step thought process"
-}
-```
-
-## 8. Strategy Guidelines
-
-1. Always return a valid JSON with the action and reasoning fields.
-2. Use signal direction and distance to guide movement toward the bomb.
-3. Plan paths that avoid walls and minimise detours.
-4. Consider the bomb's movement when planning your path.
-5. Track how the distance shrinks to verify you're heading the right way.
-6. **Pay attention to the remaining time.**
-7. Track the time passing based on previous states and actions.
-8. Keep reasoning clear but concise, especially when time is limited.
-
-Remember, lives are at stake! Your mission is to find the moving bomb as quickly as possible.
-"""
-
-
 SYS_PROMPT_MOVING_BOMB_DETECT = """
 # Grid World Bomb Detection Task
 
@@ -567,46 +348,6 @@ Map Size: {map_size}
 ```
 """
 
-USER_PROMPT_TEMPLATE_HINT_URGE = """
-## Map
-
-{map}
-
-Map Size: {map_size}
-
-## Wall Coordinates
-
-{walls}
-
-## Environment State
-
-```json
-{state}
-```
-
-Please be quick and concise in your reasoning, the bomb is going to explode soon!
-"""
-
-USER_PROMPT_TEMPLATE_HINT_URGE2 = """
-## Map
-
-{map}
-
-Map Size: {map_size}
-
-## Wall Coordinates
-
-{walls}
-
-## Environment State
-
-```json
-{state}
-```
-
-Hurry up! The bomb is going to explode soon!
-"""
-
 
 class Action(BaseModel):
     action: str
@@ -715,7 +456,8 @@ class GridWorldEnv:
         parser.add_argument(
             "--task_type",
             type=str,
-            choices=["treasure", "static_bomb", "static_bomb_hint", "static_bomb_hint_urge", "static_bomb_hint_urge2", "static_bomb_urge2_no_hint", "moving_bomb", "moving_bomb_detect"],
+            # choices=["treasure", "static_bomb", "static_bomb_hint", "static_bomb_hint_urge", "static_bomb_hint_urge2", "static_bomb_urge2_no_hint", "moving_bomb", "moving_bomb_detect"],
+            choices=["treasure", "static_bomb", "moving_bomb_detect"],
             default="treasure",
             help="Type of task to be performed",
         )
@@ -755,11 +497,6 @@ class GridWorldEnv:
         available_system_prompts = {
             "treasure": SYS_PROMPT_STATIC_TREASURE,
             "static_bomb": SYS_PROMPT_STATIC_BOMB,
-            "static_bomb_hint": SYS_PROMPT_STATIC_BOMB_HINT,
-            "static_bomb_hint_urge": SYS_PROMPT_STATIC_BOMB_HINT,
-            "static_bomb_hint_urge2": SYS_PROMPT_STATIC_BOMB_HINT,
-            "static_bomb_urge2_no_hint": SYS_PROMPT_STATIC_BOMB,
-            "moving_bomb": SYS_PROMPT_MOVING_BOMB,
             "moving_bomb_detect": SYS_PROMPT_MOVING_BOMB_DETECT,
         }
         self.system_prompt = available_system_prompts.get(
@@ -767,9 +504,6 @@ class GridWorldEnv:
         )
         self.user_prompt_template = {
             "static_bomb_hint": USER_PROMPT_TEMPLATE,
-            "static_bomb_hint_urge": USER_PROMPT_TEMPLATE_HINT_URGE,
-            "static_bomb_hint_urge2": USER_PROMPT_TEMPLATE_HINT_URGE2,
-            "static_bomb_urge2_no_hint": USER_PROMPT_TEMPLATE_HINT_URGE2,
         }.get(self.task_type, USER_PROMPT_TEMPLATE)
         self.action_space = ACTION_SPACE
 
