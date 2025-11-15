@@ -9,6 +9,9 @@ This repository contains all code and datasets used in our experiments on **LLM 
 
 Modern large language models (LLMs) show strong reasoning and world-knowledge capabilities—but can they **perceive time** as it passes?
 This project investigates that question through the **Token-Time Hypothesis**, which posits that LLMs may treat token counts as discrete proxies for real-world, continuous time. We explore whether this implicit mapping influences how they interpret, reason, and act under temporal constraints.
+<br>
+
+![Overview Illustration](images/overview.png)
 
 ### Core Research Questions
 
@@ -26,11 +29,19 @@ This project investigates that question through the **Token-Time Hypothesis**, w
    In UQA, we compare model accuracy and output length between *normal* and *urgent* prompts (e.g., “Please answer quickly!!!”).
    Models consistently shorten responses under urgency while maintaining or improving accuracy—especially on reasoning benchmarks—suggesting that they internalize the relation between shorter token sequences and reduced response time.
 
+<br>
+
+![UQA Illustration](images/UQA.png)
+
 3. **BombRush: How do LLMs plan and reason when time literally runs out?**
    BombRush extends the study from static tasks to a dynamic, interactive environment.
    An LLM agent navigates a grid world to locate a hidden bomb before it “explodes,” with every reasoning token consuming simulated time.
    The agent must balance thoughtfulness and action, dynamically adjusting reasoning depth as time diminishes.
    This experiment reveals that reasoning verbosity decreases as temporal pressure increases, demonstrating adaptive time-aware decision making.
+
+<br>
+
+![BombRush Illustration](images/bomb_rush.png)
 
 Together, these experiments offer the first systematic evidence that LLMs possess a primitive but measurable awareness of temporal progression, bridging the gap between discrete linguistic processing and continuous real-world time.
 
