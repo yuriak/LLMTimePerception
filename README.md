@@ -152,18 +152,28 @@ PYTHONPATH=src python src/uqa_attribution.py \
 ### 3️⃣ BombRush (Time-Aware Decision Making)
 
 ```bash
-PYTHONPATH=src python src/bombrush_evaluation.py \
-  --inference_mode api_self_hosted \
-  --base_url http://localhost:9876/v1/ \
+task_type="moving_bomb_detect"
+output_dir="./bombrush_exp/${model_short_name}_${task_type}/"
+log_name="${model_short_name}_${task_type}.log"
+mkdir -p ${output_dir}
+PYTHONPATH=./src/ python src/evaluation.py --inference_mode api \
   --api_key None \
-  --llm_in_use meta-llama/Llama-3.3-70B-Instruct \
-  --max_runs 10 \
+  --base_url http://127.0.0.1:9876/v1/ \
+  --llm_in_use ${model} \
+  --grid_size ${map_size} \
+  --wall_density ${wall_density} \
+  --initial_remaining_time ${initial_remaining_time} \
+  --action_time_consume ${action_time_consume} \
+  --time_measurement_mode ${time_measurement_mode} \
+  --max_steps ${max_steps} \
+  --task_type ${task_type} \
+  --bomb_move_ratio 3 \
+  --max_runs ${max_runs} \
   --num_workers 2 \
-  --output_dir ./bombrush_eval \
-  --task_type static_bomb_hint \
-  --grid_size "(10, 10)" \
-  --time_measurement_mode token \
-  --json_mode
+  --output_dir ${output_dir} \
+  --self_serve_vllm \
+  --max_tokens 24576 \
+  --debug | tee ${output_dir}/${log_name}
 ```
 
 Available task variants (see `GridWorldEnv.add_arguments` inside `bombrush_grid_world.py`):
